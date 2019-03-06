@@ -20,7 +20,7 @@ public class IRMIServerImp implements IRMIServer, Serializable {
     @Override
     public ServerConfiguration getStringServerDes(Student student, ServerConfiguration config) throws RemoteException {
         String maSV = student.getMaSV();
-        if (ObjectServer.listMaSV.contains(maSV))
+        if (TCPServer.listMaSV.contains(maSV))
             config.setStringServerPort(StringServer.PORT);
         return config;
     }
@@ -28,7 +28,7 @@ public class IRMIServerImp implements IRMIServer, Serializable {
     @Override
     public ServerConfiguration getNumericServerDes(Student student, ServerConfiguration config) throws RemoteException {
         String maSV = student.getMaSV();
-        if (ObjectServer.listMaSV.contains(maSV))
+        if (TCPServer.listMaSV.contains(maSV))
             config.setNumericServerPort(NumericServer.PORT);
         return config;
     }

@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Answer;
 import model.Student;
+import view.Form;
 
 /**
  *
@@ -25,6 +26,7 @@ public class NumericServer extends Thread {
     static final int PORT = 10002;
     static final HashMap<String, Integer> DIC = initDictionary();    
     
+    private Form frm;
     ServerSocket server;
     
     public static HashMap<String, Integer> initDictionary() {
@@ -41,8 +43,8 @@ public class NumericServer extends Thread {
         return dic;
     }
         
-    public NumericServer() {
-        
+    public NumericServer(Form frm) {
+        this.frm = frm;
     }
     
     private void init() throws Exception {
@@ -59,6 +61,7 @@ public class NumericServer extends Thread {
         DataOutputStream dos = null;
         try {
             Socket socket = server.accept();
+            socket.setSoTimeout(TCPServer.TIMEOUT);
             oos = new ObjectOutputStream(socket.getOutputStream());
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
@@ -66,19 +69,32 @@ public class NumericServer extends Thread {
             String havoten = dis.readUTF();
             int nhom = dis.readInt();
             int code = dis.readInt();
+            if (!TCPServer.listMaSV.contains(maSV))
+                return;
             Student student = new Student(maSV, havoten, "", nhom);
-            Answer answer = new Answer(student, new Object[2], new boolean[2], true);
+            Answer answer = null;
+            for (Answer a : TCPServer.listAnswer) {
+                if (a.getStudent().getMaSV().equals(maSV)) {
+                    answer = a;
+                    break;
+                }
+            }
             switch (code) {
                 case 0:
                     answer.getIsRights()[0] = coPrimeProblem(dis, dos);
                     answer.getIsRights()[1] = primeProblem(dis, dos);
                     break;
                 case 1:
-                    answer.getIsRights()[0] = primeProblem(dis, dos);
-                    answer.getIsRights()[1] = coPrimeProblem(dis, dos);
+                    answer.getIsRights()[1] = primeProblem(dis, dos);
+                    answer.getIsRights()[0] = coPrimeProblem(dis, dos);
                     break;
             }
             oos.writeObject(answer);
+            frm.updateInfo();
+            oos.close();
+            dis.close();
+            dos.close();
+            socket.close();
         } catch (Exception e) {
             try {
                 oos.close();

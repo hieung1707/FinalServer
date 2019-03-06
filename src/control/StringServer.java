@@ -11,13 +11,10 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Objects;
 import java.util.Random;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import model.Answer;
 import model.Student;
+import view.Form;
 
 /**
  *
@@ -27,10 +24,11 @@ public class StringServer extends Thread {
     static final int PORT = 10001;
     static final int step = 3;
     
+    private Form frm;
     ServerSocket server;
     
-    public StringServer() {
-
+    public StringServer(Form frm) {
+        this.frm = frm;
     }
     
     private void init() throws Exception {
@@ -47,6 +45,7 @@ public class StringServer extends Thread {
         DataOutputStream dos = null;
         try {
             Socket socket = server.accept();
+            socket.setSoTimeout(TCPServer.TIMEOUT);
             oos = new ObjectOutputStream(socket.getOutputStream());
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
@@ -54,19 +53,33 @@ public class StringServer extends Thread {
             String hovaten = dis.readUTF();
             int nhom = dis.readInt();
             int code = dis.readInt();
-            Answer answer = new Answer(new Student(maSV, hovaten, "", nhom), new Object[3], new boolean[3], true);
+            if (!TCPServer.listMaSV.contains(maSV)) {
+                oos.close();
+                dis.close();
+                dos.close();
+                socket.close();
+                return;
+            }
+            Answer answer = null;
+            for (Answer a : TCPServer.listAnswer) {
+                if (a.getStudent().getMaSV().equals(maSV)) {
+                    answer = a;
+                    break;
+                }
+            }
             switch (code) {
                 case 0:
-                    answer.getIsRights()[0] = ceasarProblem(dis, dos);
-                    answer.getIsRights()[1] = subStringProblem(dis, oos);
-                    answer.getIsRights()[2] = countCharProblem(dis, dos);
+                    answer.getIsRights()[2] = ceasarProblem(dis, dos);
+                    answer.getIsRights()[3] = subStringProblem(dis, oos);
+                    answer.getIsRights()[4] = countCharProblem(dis, dos);
                     break;
                 case 1:
-                    answer.getIsRights()[0] = countCharProblem(dis, dos);
-                    answer.getIsRights()[1] = subStringProblem(dis, oos);
+                    answer.getIsRights()[4] = countCharProblem(dis, dos);
+                    answer.getIsRights()[3] = subStringProblem(dis, oos);
                     answer.getIsRights()[2] = ceasarProblem(dis, dos);
             }
             oos.writeObject(answer);
+            frm.updateInfo();
             oos.close();
             dis.close();
             dos.close();

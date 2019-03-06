@@ -6,24 +6,27 @@
 package finals;
 
 import control.NumericServer;
-import control.ObjectServer;
+import control.TCPServer;
 import control.RMIServer;
 import control.StringServer;
+import view.Form;
 
 /**
  *
  * @author ASUS
  */
 public class Finals {
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new ObjectServer().start();
+        Form frm = new Form();
+        new TCPServer(frm).start();
         new RMIServer().start();
-        new StringServer().start();
-        new NumericServer().start();
+        new StringServer(frm).start();
+        new NumericServer(frm).start();
+
     }
-    
+
 }
