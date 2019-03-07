@@ -63,8 +63,10 @@ public class TCPServer extends Thread {
                 listAnswer.add(new Answer(s, new Object[5], new boolean[5], true));
                 frm.setAnswerList(listAnswer);
             }
-            config.setRmiServerName(RMI_NAME);
-            config.setRmiPort(RMI_PORT);
+            config.setNumericServerPort(NumericServer.PORT);
+            config.setStringServerPort(StringServer.PORT);
+//            config.setRmiServerName(RMI_NAME);
+//            config.setRmiPort(RMI_PORT);
             config.setCode(new Random().nextInt(2));
             oos.writeObject(config);
             oos.close();
