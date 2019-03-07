@@ -30,7 +30,7 @@ public class TCPServer extends Thread {
     static final int CONFIG_PORT = 12345;
     static final int TIMEOUT = 5000;
     static volatile ArrayList<String> listMaSV = new ArrayList<>();
-    static volatile ArrayList<Answer> listAnswer = new ArrayList<>();
+    public static volatile ArrayList<Answer> listAnswer = new ArrayList<>();
 
     private ServerSocket socket;
     private Form frm;

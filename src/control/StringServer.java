@@ -53,18 +53,27 @@ public class StringServer extends Thread {
             String hovaten = dis.readUTF();
             int nhom = dis.readInt();
             int code = dis.readInt();
-            if (!TCPServer.listMaSV.contains(maSV)) {
-                oos.close();
-                dis.close();
-                dos.close();
-                socket.close();
-                return;
-            }
+//            if (!TCPServer.listMaSV.contains(maSV)) {
+//                oos.close();
+//                dis.close();
+//                dos.close();
+//                socket.close();
+//                return;
+//            }
+            Student student = new Student(maSV, hovaten, socket.getInetAddress().getHostAddress(), nhom);
             Answer answer = null;
-            for (Answer a : TCPServer.listAnswer) {
-                if (a.getStudent().getMaSV().equals(maSV)) {
-                    answer = a;
-                    break;
+            if (!TCPServer.listMaSV.contains(maSV)) {
+                TCPServer.listMaSV.add(maSV);
+                answer = new Answer(student, new Object[5], new boolean[5], true);
+                TCPServer.listAnswer.add(answer);
+                frm.updateInfo();
+            }
+            else {
+                for (Answer a : TCPServer.listAnswer) {
+                    if (a.getStudent().getMaSV().equals(maSV)) {
+                        answer = a;
+                        break;
+                    }
                 }
             }
             switch (code) {

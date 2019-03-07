@@ -5,10 +5,10 @@
  */
 package view;
 
+import control.TCPServer;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import model.Answer;
-import model.Student;
 
 /**
  *
@@ -20,7 +20,7 @@ public class Form extends javax.swing.JFrame {
      * Creates new form Form
      */
     public Form() {
-        listAnswer = new ArrayList<>();
+        listAnswer = TCPServer.listAnswer;
         initComponents();
         setLocationRelativeTo(null);
         setVisible(true);

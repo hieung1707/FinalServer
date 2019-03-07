@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Answer;
@@ -66,17 +67,25 @@ public class NumericServer extends Thread {
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
             String maSV = dis.readUTF();
-            String havoten = dis.readUTF();
+            String hovaten = dis.readUTF();
             int nhom = dis.readInt();
             int code = dis.readInt();
-            if (!TCPServer.listMaSV.contains(maSV))
-                return;
-            Student student = new Student(maSV, havoten, "", nhom);
+//            if (!TCPServer.listMaSV.contains(maSV))
+//                return;
+            Student student = new Student(maSV, hovaten, socket.getInetAddress().getHostAddress(), nhom);
             Answer answer = null;
-            for (Answer a : TCPServer.listAnswer) {
-                if (a.getStudent().getMaSV().equals(maSV)) {
-                    answer = a;
-                    break;
+            if (!TCPServer.listMaSV.contains(maSV)) {
+                TCPServer.listMaSV.add(maSV);
+                answer = new Answer(student, new Object[5], new boolean[5], true);
+                TCPServer.listAnswer.add(answer);
+                frm.updateInfo();
+            }
+            else {
+                for (Answer a : TCPServer.listAnswer) {
+                    if (a.getStudent().getMaSV().equals(maSV)) {
+                        answer = a;
+                        break;
+                    }
                 }
             }
             switch (code) {
