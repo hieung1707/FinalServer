@@ -103,7 +103,7 @@ public class NumericServer extends Thread {
                     break;
             }
             oos.writeObject(answer);
-            frm.updateInfo();
+//            frm.updateInfo();
             oos.close();
             dis.close();
             dos.close();

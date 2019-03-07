@@ -94,7 +94,7 @@ public class StringServer extends Thread {
                     frm.updateInfo();
             }
             oos.writeObject(answer);
-            frm.updateInfo();
+//            frm.updateInfo();
             oos.close();
             dis.close();
             dos.close();
