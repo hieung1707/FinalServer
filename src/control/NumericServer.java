@@ -91,11 +91,15 @@ public class NumericServer extends Thread {
             switch (code) {
                 case 0:
                     answer.getIsRights()[0] = coPrimeProblem(dis, dos);
+                    frm.updateInfo();
                     answer.getIsRights()[1] = primeProblem(dis, dos);
+                    frm.updateInfo();
                     break;
                 case 1:
                     answer.getIsRights()[1] = primeProblem(dis, dos);
+                    frm.updateInfo();
                     answer.getIsRights()[0] = coPrimeProblem(dis, dos);
+                    frm.updateInfo();
                     break;
             }
             oos.writeObject(answer);

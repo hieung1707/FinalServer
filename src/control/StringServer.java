@@ -79,13 +79,19 @@ public class StringServer extends Thread {
             switch (code) {
                 case 0:
                     answer.getIsRights()[2] = ceasarProblem(dis, dos);
+                    frm.updateInfo();
                     answer.getIsRights()[3] = subStringProblem(dis, oos);
+                    frm.updateInfo();
                     answer.getIsRights()[4] = countCharProblem(dis, dos);
+                    frm.updateInfo();
                     break;
                 case 1:
                     answer.getIsRights()[4] = countCharProblem(dis, dos);
+                    frm.updateInfo();
                     answer.getIsRights()[3] = subStringProblem(dis, oos);
+                    frm.updateInfo();
                     answer.getIsRights()[2] = ceasarProblem(dis, dos);
+                    frm.updateInfo();
             }
             oos.writeObject(answer);
             frm.updateInfo();
